@@ -41,3 +41,19 @@ async function buscarUsuarios() {
 
 buscarUsuarios();
 
+// Testeee
+await database.write("/oii", "funcionouuu");
+
+buscarUsuarios();
+
+
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  const users = await prisma.usuario.findMany();
+  console.log("Usuários:", users);
+}
+
+main();

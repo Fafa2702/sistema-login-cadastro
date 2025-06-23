@@ -1,69 +1,93 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient()
+const PORT = 3000
+const HOST = '172.30.0.160'
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
-// GET com filtro opcional
-router.get('/', async (req, res) => {
+router.get('/usuario', async (req, res) => {
+  console.log("pagina caregada")
   try {
-    const filtro = req.query.name;
-    const usuarios = filtro
-      ? await prisma.usuario.findMany({
-          where: {
-            OR: [
-              { name: filtro },
-              { email: filtro },
-              { telefone: filtro }
-            ]
-          }
-        })
-      : await prisma.usuario.findMany();
+    let usuario = []
+    // filtro query
+    if (req.query) {
+      usuario = await  prisma.usuario.findMany({
+        where:{
+        name: req.query.name,
+        email: req.query.name,
+        telefone: req.query.name
 
-    res.json(usuarios);
+
+        },
+      })
+    }
+    else{
+
+     usuario = await prisma.usuario.findMany()
+
+    }
+    res.json(usuario)
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: 'Erro ao buscar usuário' });
+    console.error(err)
+    res.status(500).json({ erro: 'erro ao buscar o usuario' })
   }
-});
+})
 
-// POST - Criar novo usuário
-router.post('/', async (req, res) => {
+// cria
+router.post('/usuario', async (req, res) => {
   try {
-    const { name, email, telefone, senha } = req.body;
     const novo = await prisma.usuario.create({
-      data: { name, email, telefone, senha }
-    });
-    res.status(201).json(novo);
+      data: {
+        name: req.body.name,
+        telefone: req.body.telefone,
+        email: req.body.email
+      }
+    })
+    res.status(201).json(novo)
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: 'Erro ao criar usuário' });
+    console.error(err)
+    res.status(500).json({ erro: 'erro ao criar usuario' })
   }
-});
+})
 
-// PUT
-router.put('/:id', async (req, res) => {
+
+// ": significa variavel" -- edita
+router.put('/usuario/:id', async (req, res) => {
   try {
     const atualizado = await prisma.usuario.update({
       where: { id: Number(req.params.id) },
-      data: req.body
-    });
-    res.json(atualizado);
+      data: {
+        name: req.body.name,
+        telefone: req.body.telefone,
+        email: req.body.email
+      }
+    })
+    res.status(200).json(atualizado)
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ erro: 'Erro ao atualizar usuário' });
+    console.error(err)
+    res.status(500).json({ erro: 'erro ao atualizar usuario' })
   }
-});
+})
 
-// DELETE
-router.delete('/:id', async (req, res) => {
+// deleta
+router.delete('/usuario/:id', async (req, res) => {
   try {
     const id = Number(req.params.id);
-    await prisma.usuario.delete({ where: { id } });
-    res.json({ message: 'Deletado com sucesso' });
+
+    const existe = await prisma.usuario.findUnique({
+      where: { id }
+    });
+
+
+    await prisma.usuario.delete({
+      where: { id }
+    });
+
+    res.status(200).json({ message: 'deletado com sucesso' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ erro: 'Erro ao deletar usuário' });
+    res.status(500).json({ erro: 'erro ao deletar usuario' });
   }
 });
 
