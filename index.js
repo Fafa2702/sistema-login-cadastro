@@ -4,6 +4,7 @@ import { ref, get } from "firebase/database";
 
 async function buscarUsuarios() {
   try {
+    // coisinha pra ver o tempo que demora pra pegar dados no banco
     const before = Date.now();
     const dbRef = ref(db, "/ping");
     const snapshot = await get(dbRef);
