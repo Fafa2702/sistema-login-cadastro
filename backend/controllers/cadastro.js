@@ -4,7 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// GET com filtro opcional
+// get 
 router.get('/', async (req, res) => {
   try {
     const filtro = req.query.name;
@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST - Criar novo usuário
+// post
 router.post('/', async (req, res) => {
   try {
     const { name, email, telefone, senha } = req.body;
@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT
+// put
 router.put('/:id', async (req, res) => {
   try {
     const atualizado = await prisma.usuario.update({
@@ -55,7 +55,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE
+// deleta
 router.delete('/:id', async (req, res) => {
   try {
     const id = Number(req.params.id);
