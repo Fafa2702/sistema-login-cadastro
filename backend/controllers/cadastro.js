@@ -1,8 +1,9 @@
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient()
 const PORT = 3000
-const HOST = '172.30.0.160'
+const HOST = '172.30.0.131'
 
 const router = express.Router();
 
@@ -13,15 +14,15 @@ router.get('/usuario', async (req, res) => {
     // filtro query
     if (req.query) {
       usuario = await  prisma.usuario.findMany({
-        where:{
-        name: req.query.name,
-        email: req.query.name,
-        telefone: req.query.name
-
-
-        },
-      })
-    }
+        where: {
+          OR: [
+          { name: req.query.name },
+          { email: req.query.name },
+          { telefone: req.query.name }
+        ]
+      }
+    })
+  }
     else{
 
      usuario = await prisma.usuario.findMany()
@@ -34,6 +35,10 @@ router.get('/usuario', async (req, res) => {
   }
 })
 
+
+
+
+
 // cria
 router.post('/usuario', async (req, res) => {
   try {
@@ -41,20 +46,29 @@ router.post('/usuario', async (req, res) => {
       data: {
         name: req.body.name,
         telefone: req.body.telefone,
-        email: req.body.email
+        email: req.body.email,
+        senha: req.body.senha
       }
-    })
-    res.status(201).json(novo)
+    });
+
+    res.status(201).json(novo);
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ erro: 'erro ao criar usuario' })
+    console.error(err);
+    res.status(500).json({ erro: 'erro ao criar usuario' });
   }
-})
+});
+
+
+
+
 
 
 // ": significa variavel" -- edita
 router.put('/usuario/:id', async (req, res) => {
   try {
+    if (!req.body.name || !req.body.telefone || !req.body.email) {
+  return res.status(400).json({ erro: "Campos obrigatórios não preenchidos" });
+}
     const atualizado = await prisma.usuario.update({
       where: { id: Number(req.params.id) },
       data: {
@@ -69,6 +83,12 @@ router.put('/usuario/:id', async (req, res) => {
     res.status(500).json({ erro: 'erro ao atualizar usuario' })
   }
 })
+
+
+
+
+
+
 
 // deleta
 router.delete('/usuario/:id', async (req, res) => {
