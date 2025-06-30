@@ -7,27 +7,27 @@ const HOST = '172.30.0.131'
 
 const router = express.Router();
 
-router.get('/usuario', async (req, res) => {
+router.get('/', async (req, res) => {
   console.log("pagina caregada")
   try {
     let usuario = []
     // filtro query
-    if (req.query) {
-      usuario = await  prisma.usuario.findMany({
-        where: {
-          OR: [
-          { name: req.query.name },
-          { email: req.query.name },
-          { telefone: req.query.name }
-        ]
-      }
-    })
-  }
-    else{
+ const filtro = req.query.name;
 
-     usuario = await prisma.usuario.findMany()
-
+if (filtro) {
+  usuario = await prisma.usuario.findMany({
+    where: {
+      OR: [
+        { name: filtro },
+        { email: filtro },
+        { telefone: filtro }
+      ]
     }
+  });
+} else {
+  usuario = await prisma.usuario.findMany();
+}
+
     res.json(usuario)
   } catch (err) {
     console.error(err)
@@ -39,15 +39,27 @@ router.get('/usuario', async (req, res) => {
 
 
 
-// cria
-router.post('/usuario', async (req, res) => {
+// rota de cadastro
+router.post('/', async (req, res) => {
   try {
+
+ const { name, telefone, email, senha } = req.body;
+
+    if (!name || !telefone || !email || !senha) {
+      return res.status(400).json({ erro: 'Prencha todos os campos por favor' });
+    }
+
+    // cripitogração da senha 
+    const saltRounds = 10;
+    const senhaHashed = await bcrypt.hash(senha, saltRounds);
+    console.log(hash)
+    
     const novo = await prisma.usuario.create({
       data: {
-        name: req.body.name,
-        telefone: req.body.telefone,
-        email: req.body.email,
-        senha: req.body.senha
+        name,
+        telefone,
+        email,
+        senha: senhaHashed
       }
     });
 
@@ -64,7 +76,7 @@ router.post('/usuario', async (req, res) => {
 
 
 // ": significa variavel" -- edita
-router.put('/usuario/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     if (!req.body.name || !req.body.telefone || !req.body.email) {
   return res.status(400).json({ erro: "Campos obrigatórios não preenchidos" });
@@ -91,7 +103,7 @@ router.put('/usuario/:id', async (req, res) => {
 
 
 // deleta
-router.delete('/usuario/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const id = Number(req.params.id);
 
