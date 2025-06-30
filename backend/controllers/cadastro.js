@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
     // cripitogração da senha 
     const saltRounds = 10;
     const senhaHashed = await bcrypt.hash(senha, saltRounds);
-    console.log(hash)
+    console.log(senhaHashed)
     
     const novo = await prisma.usuario.create({
       data: {

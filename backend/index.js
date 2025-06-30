@@ -12,7 +12,7 @@ const PORT = 3000;
 app.use(express.json());
 app.use('/usuario', cadastroRoutes);
 app.use('/usuario', loginRoutes);
-s
+
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
