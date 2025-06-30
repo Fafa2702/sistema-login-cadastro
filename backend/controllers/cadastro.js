@@ -7,6 +7,7 @@ const HOST = '172.30.0.131'
 
 const router = express.Router();
 
+// rota para ver
 router.get('/', async (req, res) => {
   console.log("pagina caregada")
   try {
