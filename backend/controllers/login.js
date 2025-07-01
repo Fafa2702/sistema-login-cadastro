@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
   const { email, senha } = req.body;
 // verifica se os campos n tao vazios
   if (!email || !senha) {
-    return res.status(400).json({ erro: 'Preencha todos os campos.' });
+    return res.status(400).json({ erro: 'prencha todos os capos pfv' });
   }
 
   try {
@@ -51,8 +51,8 @@ router.post('/login', async (req, res) => {
 
   } catch (err) {
     //aaaaaaaa deu erro 
-    console.error('Erro no login:', err);
-    res.status(500).json({ erro: 'Erro interno do servidor.' });
+    console.error('affs deu erro ', erro);
+    res.status(500).json({ erro: 'affs deu erro ' });
   }
 });
 
