@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
  const { name, telefone, email, senha } = req.body;
 
     if (!name || !telefone || !email || !senha) {
-      return res.status(400).json({ erro: 'Prencha todos os campos por favor' });
+      return res.status(400).json({ erro: 'prencha todos os campos por favor' });
     }
 
     // cripitogração da senha 
@@ -80,7 +80,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     if (!req.body.name || !req.body.telefone || !req.body.email) {
-  return res.status(400).json({ erro: "Campos obrigatórios não preenchidos" });
+  return res.status(400).json({ erro: "campos obrigatórios não preenchidos" });
 }
     const atualizado = await prisma.usuario.update({
       where: { id: Number(req.params.id) },
