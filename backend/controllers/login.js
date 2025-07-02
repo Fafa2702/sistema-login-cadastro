@@ -53,6 +53,7 @@ router.post('/login', async (req, res) => {
     //aaaaaaaa deu erro 
     console.error('affs deu erro no login', erro);
     res.status(500).json({ erro: 'affs deu erro no login' });
+
   }
 });
 
