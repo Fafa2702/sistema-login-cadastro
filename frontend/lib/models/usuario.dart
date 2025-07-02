@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-
-// classe usuario e requisição do banco
+// classe usuario
 class Usuario {
   final String id;
   final String nome;

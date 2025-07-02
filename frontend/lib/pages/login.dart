@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/cadastro.dart';
-import '../services/auth.dart';
 import '../widgets/input.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:http/http.dart' as http;
 
 class login extends StatefulWidget {
@@ -12,6 +10,7 @@ class login extends StatefulWidget {
   loginState createState() => loginState();
 }
 
+// logica explicada em usuario.dart
 class loginState extends State<login> {
   final _formKey = GlobalKey<FormState>();
   // validação do form
@@ -65,7 +64,6 @@ class loginState extends State<login> {
     return Scaffold(
       appBar: AppBar(title: Text('Login')),
       body: SingleChildScrollView(
-        // <- evita o erro de overflow
         child: Form(
           key: _formKey,
           child: Padding(

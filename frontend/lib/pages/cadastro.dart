@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/pages/login.dart';
-import '../services/auth.dart';
 import '../widgets/input.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:http/http.dart' as http;
@@ -12,19 +11,16 @@ class cadastro extends StatefulWidget {
 }
 
 class cadastroState extends State<cadastro> {
-  final _formKey = GlobalKey<FormState>();
-  // validação do form
+  final _formKey = GlobalKey<FormState>(); // validação do form
+
+  // controlers
   final TextEditingController senhaController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController telefoneController = TextEditingController();
-// controlers
 
+  // maskara de telefone
   final maskTelefone = MaskTextInputFormatter(
-    mask: '(##) #####-####',
-    filter: {"#": RegExp(r'[0-9]')},
-  );
-  final maskEmail = MaskTextInputFormatter(
     mask: '(##) #####-####',
     filter: {"#": RegExp(r'[0-9]')},
   );
@@ -32,6 +28,7 @@ class cadastroState extends State<cadastro> {
   Future<void> enviar() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // pega os usuarios do controller e envia para o banco de dados
     final usuario = {
       "senha": senhaController.text,
       "name": nameController.text,
@@ -39,6 +36,7 @@ class cadastroState extends State<cadastro> {
       "email": emailController.text,
     };
 
+    // pega os dados e envia para a rota que vai execultar um POSt
     final resposta = await http.post(
       Uri.parse('http://172.30.0.120:3000/usuario'),
       headers: {"Content-Type": "application/json"},
@@ -47,26 +45,8 @@ class cadastroState extends State<cadastro> {
 
     if (resposta.statusCode == 201) {
       // se a senha e o email forem validos mostra o modal
-      await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('parabens'),
-          content: const Text('cadastro realizado com sucesso!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => login(),
-                  ),
-                );
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+
+      await modalCadastro(context); // chamando modal cadastro
 
       // Limpa campos após fechar modal
       senhaController.clear();
@@ -78,6 +58,57 @@ class cadastroState extends State<cadastro> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("tente de novo ")));
     }
+  }
+
+// modal de cadastro
+  Future<void> modalCadastro(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false, // impede fechar tocando fora do alerta
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Parabéns',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text('Cadastro realizado com sucesso!'),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => login()),
+                      );
+                    },
+                    child: const Text('Ir para tela de login'),
+                  ),
+                ],
+              ),
+            ),
+            // Botão de fechar (X) no topo direito
+            Positioned(
+              right: 0,
+              child: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
