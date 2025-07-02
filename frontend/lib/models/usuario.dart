@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+// classe usuario e requisição do banco
 class Usuario {
   final String id;
   final String nome;

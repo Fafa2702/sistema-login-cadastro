@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'api.dart';
+// faz login e cadstro usando http e salva o token com função de biblioteca do flutter
 
 class autentificacao {
   // storage e um armazenamento de dados locais essa função em especifico
@@ -52,5 +53,9 @@ class autentificacao {
   static Future<void> logout() async {
     await armazenamento.delete(key: 'token');
     // deleta o token que armazenamos ao o usuario logar ou seja ele desloga e para criar outro token so logando
+  }
+
+  static Future<String?> getToken() async {
+    return await armazenamento.read(key: 'token');
   }
 }
