@@ -18,11 +18,17 @@ class cadastroState extends State<cadastro> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController telefoneController = TextEditingController();
+// controlers
+
   final maskTelefone = MaskTextInputFormatter(
     mask: '(##) #####-####',
     filter: {"#": RegExp(r'[0-9]')},
-    type: MaskAutoCompletionType.lazy,
   );
+  final maskEmail = MaskTextInputFormatter(
+    mask: '(##) #####-####',
+    filter: {"#": RegExp(r'[0-9]')},
+  );
+
   Future<void> enviar() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -40,7 +46,7 @@ class cadastroState extends State<cadastro> {
     );
 
     if (resposta.statusCode == 201) {
-      // Login ok: mostra modal
+      // se a senha e o email forem validos mostra o modal
       await showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -68,7 +74,7 @@ class cadastroState extends State<cadastro> {
       telefoneController.clear();
       emailController.clear();
     } else {
-      // Erro: mostra snackbar
+      // eroo mostra snackbar
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("tente de novo ")));
     }
@@ -90,25 +96,47 @@ class cadastroState extends State<cadastro> {
                   InputField(
                     controller: nameController,
                     titulo: 'name',
+                    // maxLength: 50,
+                    icons: Icon(Icons.person),
                     obscure: false,
                   ),
                   const SizedBox(height: 16),
                   InputField(
                     controller: emailController,
                     titulo: 'email',
+                    icons: Icon(Icons.email),
                     keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Digite um e-mail';
+                      } // obrigatorio o uso desse para nao ser null
+                      if (!value.contains('@')) {
+                        return 'Email inválido';
+                      }
+                      return null;
+                    },
                     obscure: false,
                   ),
                   const SizedBox(height: 16),
                   InputField(
                     controller: telefoneController,
                     titulo: 'telefone',
+                    icons: Icon(Icons.phone),
+                    maskFormatter: maskTelefone,
                     keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (maskTelefone.getUnmaskedText().length != 11)
+                        return 'Telefone inválido';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 16),
                   InputField(
                     controller: senhaController,
+                    // maxLength: 10,
+                    keyboardType: TextInputType.number,
                     titulo: 'senha',
+                    icons: Icon(Icons.password_outlined),
                     obscure: true,
                   ),
                   SizedBox(height: 10),
