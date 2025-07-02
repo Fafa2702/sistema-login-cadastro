@@ -51,7 +51,7 @@ router.post('/login', async (req, res) => {
 
   } catch (err) {
     //aaaaaaaa deu erro 
-    console.error('affs deu erro no login', erro);
+    console.error('affs deu erro no login', err);
     res.status(500).json({ erro: 'affs deu erro no login' });
 
   }

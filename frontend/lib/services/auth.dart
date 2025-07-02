@@ -14,7 +14,7 @@ class autentificacao {
   // função de login
   static Future<bool> Login(String email, String senha) async {
     final saida = await http.post(
-      Uri.parse('http://localhost:3000/usuario/login'),
+      Uri.parse('http://172.30.0.120:3000/usuario/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email, 'senha': senha}),
     );
@@ -33,7 +33,7 @@ class autentificacao {
   // função cadastro
   static Future<bool> cadastrar(Map<String, dynamic> usuario) async {
     final cadastrar = await http.post(
-      Uri.parse('http://localhost:3000/usuario'),
+      Uri.parse('http://172.30.0.120:3000/usuario'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(usuario),
     );

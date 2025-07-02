@@ -5,7 +5,7 @@ import 'auth.dart';
 
 // serve para fazer requicisões de get e post em rotas protegidas (nenhuma criada no back mais ja adiantei)
 class conexao {
-  static const String API = "http://localhost:3000";
+  static const String API = "http://172.30.0.120:3000";
 
   Future<List<dynamic>> fetchUsers() async {
     try {

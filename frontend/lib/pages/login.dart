@@ -18,9 +18,7 @@ class loginState extends State<login> {
   final TextEditingController emailController = TextEditingController();
 
   Future<void> enviar() async {
-    // async pq requisição hhttp demora
     if (!_formKey.currentState!.validate()) return;
-    // verifica se os dados do formulario estao falidos
 
     final usuario = {
       "senha": senhaController.text,
@@ -28,26 +26,36 @@ class loginState extends State<login> {
     };
 
     final resposta = await http.post(
-      Uri.parse('http://localhost:3000/usuario/login'),
+      Uri.parse('http://172.30.0.120:3000/usuario/login'),
       headers: {"Content-Type": "application/json"},
-      // especifica que e json
       body: jsonEncode(usuario),
-      // converte para json
     );
 
-    // verifica o erro
-    final mensagem = resposta.statusCode == 201
-        ? "uuu deu certo e tem um novo usuario"
-        : "vish deu ruim boa sorte ai";
+    if (resposta.statusCode == 200) {
+      // Login ok: mostra modal
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('bem vindo ao app!'),
+          content: const Text('login realizado com sucesso!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // fecha o modal
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(mensagem)));
-    // adicona a mensagem no scaffold
-
-    // autuaçoza caso de certo e limpa controller
-    if (resposta.statusCode == 201) {
+      // Limpa campos após fechar modal
       senhaController.clear();
       emailController.clear();
+    } else {
+      // Erro: mostra snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Senha ou email incorretos')));
     }
   }
 
@@ -82,7 +90,14 @@ class loginState extends State<login> {
                 ),
                 const SizedBox(height: 16),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const (),
+                    //   ),
+                    // );
+                  },
                   child: const Text('Não tem conta? Cadastre-se'),
                 ),
               ],
