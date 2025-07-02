@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/cadastro.dart';
 import '../services/auth.dart';
 import '../widgets/input.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -91,12 +92,12 @@ class loginState extends State<login> {
                 const SizedBox(height: 16),
                 TextButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const (),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => cadastro(),
+                      ),
+                    );
                   },
                   child: const Text('Não tem conta? Cadastre-se'),
                 ),
