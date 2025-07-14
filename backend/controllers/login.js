@@ -51,8 +51,10 @@ router.post('/login', async (req, res) => {
 
   } catch (err) {
     //aaaaaaaa deu erro 
+
     console.error('affs deu erro ', erro);
     res.status(500).json({ erro: 'affs deu erro ' });
+
   }
 });
 

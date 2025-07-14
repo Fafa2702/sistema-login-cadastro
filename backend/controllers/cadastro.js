@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient()
 const PORT = 3000
-const HOST = '172.30.0.131'
+const HOST = '172.30.0.120'
 
 const router = express.Router();
 
